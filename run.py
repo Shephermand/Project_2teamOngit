@@ -47,6 +47,20 @@ class Comment(db.Model):
         # self.up_time = up_time
         self.uid = uid
 
+    def to_dict(self):
+        dic = {
+            'uname':self.user,
+            'text':self.text,
+            'up_time':str(self.up_time),
+        }
+        return dic
+
+def comm_all():
+    comm = Comment.query.all()
+    lst = []
+    for c in comm:
+        lst.append(c.to_dict())
+    return lst
 
 @app.route('/')
 def index():
@@ -88,7 +102,8 @@ def login_view():
 
         if 'uname' in session:
             # return redirect(url)
-            return render_template('My_page.html')
+            user = User.query.filter_by(uname=session['uname']).first()
+            return render_template('My_page.html',nickname=user.nickname)
         else:
             if 'uname' in request.cookies:
                 uname = request.cookies['uname']
@@ -118,7 +133,9 @@ def login_view():
 def My_page_view():
     if request.method == "GET":
         if 'uname' in session:
-            return render_template('My_page.html')
+            user = User.query.filter_by(uname=session['uname']).first()
+            comm = Comment.query.all()
+            return render_template('My_page.html',nickname=user.nickname)
         else:
             return redirect('/')
     else:
@@ -134,7 +151,21 @@ def My_page_view():
         # test = db.session.query(Comment).filter(Comment.up_time<datetime.datetime.now(),Comment.uid==uid).first()
         # print(type(test.text))
         # content = test.text + uname + '发表于:'+ str(up_time)
-        return render_template('My_page.html')
+        return render_template('My_page.html',nickname=user.nickname)
+
+@app.route('/logout')
+def logout_view():
+    resp = redirect('/')
+    if 'uname' in session:
+        del session['uname']
+    if 'uname' in request.cookies:
+        resp.delete_cookie('uname')
+    return resp
+
+@app.route('/get_comm')
+def get_comm_view():
+    lst = comm_all()
+    return lst
 
 
 if __name__ == "__main__":
