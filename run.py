@@ -3,9 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_script import Manager
 from flask_migrate import Migrate,MigrateCommand
 from werkzeug.security import generate_password_hash,check_password_hash
+import json
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:123456@localhost:3306/ajax"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:han1345@localhost:3306/ajax"
 app.config["DEBUG"] = True
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = 'hahanijinglaile'
@@ -49,14 +50,15 @@ class Comment(db.Model):
 
     def to_dict(self):
         dic = {
-            'uname':self.user,
+            'uname':self.user.uname,
             'text':self.text,
             'up_time':str(self.up_time),
         }
         return dic
 
 def comm_all():
-    comm = Comment.query.all()
+    # comm = Comment.query.all()
+    comm = db.session.query(Comment).order_by('id desc')
     lst = []
     for c in comm:
         lst.append(c.to_dict())
@@ -165,6 +167,8 @@ def logout_view():
 @app.route('/get_comm')
 def get_comm_view():
     lst = comm_all()
+    lst = json.dumps(lst)
+    print(lst)
     return lst
 
 
