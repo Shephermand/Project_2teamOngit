@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash,check_password_hash
 import json
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:han1345@localhost:3306/ajax"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:123456@localhost:3306/ajax"
 app.config["DEBUG"] = True
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = 'hahanijinglaile'
@@ -58,7 +58,7 @@ class Comment(db.Model):
 
 def comm_all():
     # comm = Comment.query.all()
-    comm = db.session.query(Comment).order_by('id desc')
+    comm = db.session.query(Comment).order_by('id desc').limit(20)
     lst = []
     for c in comm:
         lst.append(c.to_dict())
@@ -120,6 +120,7 @@ def login_view():
         user = User.query.filter_by(uname=uname).first()
         if user and check_password_hash(user.upwd,upwd):
             session['uname'] = uname
+            session['password'] = upwd
             # url = session.get('url','/')
             url = '/My_page'
             resp = redirect(url)
@@ -170,6 +171,20 @@ def get_comm_view():
     lst = json.dumps(lst)
     print(lst)
     return lst
+
+@app.route('/history')
+def get_history():
+    uname = session['uname']
+    user = User.query.filter_by(uname=uname).first()
+    upwd = session['upwd']
+    if user and upwd == user.upwd:
+        #执行后端业务
+        lst = []
+        comms = user.comments
+
+        pass
+    else:
+        return redirect('/')
 
 
 if __name__ == "__main__":

@@ -22,7 +22,7 @@
             background-color: #5c81ff;
         }
         #nav a{
-            color: #a9a870;
+            color: #a9524a;
 			float:left;
 			width:100px;
 			height: 50px;
@@ -47,6 +47,11 @@
         #btn_sub{
             margin: 7px 0 0 877px;
         }
+        #comm_ar{
+            position: absolute;
+            top:349px;
+            left: 549px;
+        }
     </style>
 </head>
 <body onload="load()">
@@ -66,7 +71,10 @@
         <textarea id="text_in" name="uinfo"></textarea>
         <input id="btn_sub" type="submit" value="发表">
     </form>
-        <a href="">刷新</a>
+        <a href=""  style="text-decoration:none;">
+            <button>更新</button>
+        </a>
+
     </div>
     <div id="comm_ar"></div>
     <script>
@@ -79,7 +87,7 @@
                  //将res转换为JS对象再保存给res
                  res = JSON.parse(res);
                  //循环遍历res得到每一个对象以及数据
-                 str = ""
+                 str = "";
                  $.each(res,function(i,obj){
                      str += '<h4>';
                       str += "用户:"+obj.uname+"&nbsp";
@@ -89,9 +97,9 @@
                       str += obj.text;
                      str += '</p>';
                  });
-                 $("#comm_ar").html(str)
+                 $("#comm_ar").html(str);
              }
-         }
+         };
          xhr.send(null);
     }
     </script>
