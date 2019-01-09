@@ -176,13 +176,14 @@ def get_comm_view():
 def get_history():
     uname = session['uname']
     user = User.query.filter_by(uname=uname).first()
-    upwd = session['upwd']
-    if user and upwd == user.upwd:
+    upwd = session['password']
+    if user and check_password_hash(user.upwd,upwd):
         #执行后端业务
         lst = []
         comms = user.comments
-
-        pass
+        for c in comms:
+            lst.append(c.to_dict())
+        return json.dumps(lst)
     else:
         return redirect('/')
 

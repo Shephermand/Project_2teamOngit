@@ -57,7 +57,7 @@
 <body onload="load()">
     <div id="nav">
         <a href="/">首页</a>
-        <a href="">我的记录</a>
+        <a href="javascript:void(0);" onclick="my_history();">我的记录</a>
         <a href="">我的资料</a>
         <a href="">设置</a>
         <a href="/logout" class="no-margin">退出</a>
@@ -102,6 +102,17 @@
          };
          xhr.send(null);
     }
+
+        function my_history() {
+            $.ajax({
+                url:'/history',
+                type:'get',
+                dataType:'json',
+                success: function (data) {
+                    
+                }
+            })
+        }
     </script>
 </body>
 </html>
