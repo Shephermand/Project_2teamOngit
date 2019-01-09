@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>我的主页</title>
+    <title id="title">我的主页</title>
     <script src="/static/js/cre_xhr.js"></script>
     <script src="/static/js/jquery-1.11.3.js"></script>
 
@@ -10,8 +10,11 @@
 
     <style>
         #nav,#main{
-			width:540px;
+			width:650px;
 			margin:0 auto;
+            position: relative;
+            top:auto;
+            left: auto;
 		}
 		#main{
 			height:30px;
@@ -19,14 +22,15 @@
 			/*clear: both;*/
 		}
         #nav{
-            background-color: #5c81ff;
+            background-color: #ffae54;
+
         }
         #nav a{
-            color: #a9524a;
+            color: #14a924;
 			float:left;
 			width:100px;
 			height: 50px;
-			background-color: #5c81ff;
+			background-color: #ffae54;
 			text-align: center;
 			line-height: 50px;
 			margin-right:10px;
@@ -43,20 +47,39 @@
             width:500px;
             height:100px;
             margin: 0 430px;
+            position: relative;
+            top: auto;
+            left: -38px;
         }
         #btn_sub{
             margin: 7px 0 0 877px;
+            position: relative;
+            left: -43px;
         }
         #comm_ar{
-            position: absolute;
-            top:349px;
-            left: 549px;
+            width: 500px;
+            position: relative;
+            top:0;
+            left: 473px;
+        }
+        p{
+            width:415px;
+            margin-left: 20px;
+        }
+        h4{
+            width: 500px;
+        }
+        .hello_update{
+            width: 500px;
+            position: relative;
+            left: 391px;
         }
     </style>
 </head>
 <body onload="load()">
     <div id="nav">
         <a href="/">首页</a>
+        <a href="">我的主页</a>
         <a href="javascript:void(0);" onclick="my_history();">我的记录</a>
         <a href="">我的资料</a>
         <a href="">设置</a>
@@ -64,14 +87,13 @@
         <div class="clear"></div>
     </div>
     <div id="main"></div>
-    <h3>你好,{{nickname}}</h3>
-    <p style="text-align: center;">以下是内容</p>
+    <h3 class="hello_update">你好,{{nickname}}</h3>
     <div>
     <form action="/My_page" method="post">
         <textarea id="text_in" name="uinfo"></textarea>
         <input id="btn_sub" type="submit" value="发表">
     </form>
-        <a href=""  style="text-decoration:none;">
+        <a href="" class="hello_update" style="text-decoration:none;">
             <button>更新</button>
         </a>
 
@@ -87,13 +109,13 @@
                  //将res转换为JS对象再保存给res
                  res = JSON.parse(res);
                  //循环遍历res得到每一个对象以及数据
-                 str = "";
+                 var str = "";
                  $.each(res,function(i,obj){
                      str += '<h4>';
-                      str += "用户:"+obj.uname+"&nbsp";
+                      str += "用户:"+obj.nickname+"&nbsp";
                       str += "于:"+obj.up_time;
                      str += '</h4>';
-                     str += '<p style="margin-left: 20px">';
+                     str += '<p>';
                       str += obj.text;
                      str += '</p>';
                  });
@@ -109,9 +131,19 @@
                 type:'get',
                 dataType:'json',
                 success: function (data) {
-                    
+                    var html = "";
+                    $.each(data.reverse(),function (i,obj) {
+                        html += '<h4>';
+                            html += obj.nickname + "发表于:" + obj.up_time;
+                        html += '</h4>';
+                        html += '<p>';
+                            html += obj.text;
+                        html += '</p>';
+                    });
+                    $("#comm_ar").html(html);
                 }
-            })
+            });
+            $("#title").text('我的记录');
         }
     </script>
 </body>

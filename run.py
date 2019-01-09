@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash,check_password_hash
 import json
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:123456@localhost:3306/ajax"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:han1345@localhost:3306/ajax"
 app.config["DEBUG"] = True
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = 'hahanijinglaile'
@@ -61,7 +61,9 @@ def comm_all():
     comm = db.session.query(Comment).order_by('id desc').limit(20)
     lst = []
     for c in comm:
-        lst.append(c.to_dict())
+        dic = c.to_dict()
+        dic['nickname'] = c.user.nickname
+        lst.append(dic)
     return lst
 
 @app.route('/')
@@ -182,7 +184,9 @@ def get_history():
         lst = []
         comms = user.comments
         for c in comms:
-            lst.append(c.to_dict())
+            dic = c.to_dict()
+            dic['nickname'] = user.nickname
+            lst.append(dic)
         return json.dumps(lst)
     else:
         return redirect('/')
